@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <link rel="stylesheet" href="clock.css" type="text/css">
+    <title>New Tab</title>
+<body>
+<img class="optIcon" src="./res/gear-24.png">
+<div class="optParent" style="display: none">
+    <div class="opt">
+        <span class="optTitle">Use Standard Time</span>
+        <div class="optToggle" id="st">
+            <div class="optToggleChild"></div>
+        </div>
+    </div>
+    <div class="opt">
+        <span class="optTitle">Invert Hands</span>
+        <div class="optToggle" id="ih">
+            <div class="optToggleChild"></div>
+        </div>
+    </div>
+    <div class="opt">
+        <span class="optTitle">Blink Separator</span>
+        <div class="optToggle" id="bs">
+            <div class="optToggleChild"></div>
+        </div>
+    </div>
+    <div class="opt">
+        <span class="optTitle">Render Date</span>
+        <div class="optToggle" id="rd">
+            <div class="optToggleChild"></div>
+        </div>
+    </div>
+    <div class="opt">
+        <span class="optTitle">Render Seconds</span>
+        <div class="optToggle" id="rs">
+            <div class="optToggleChild"></div>
+        </div>
+    </div>
+    <div class="opt">
+        <span class="optTitle">Alternate Seconds</span>
+        <div class="optToggle" id="as">
+            <div class="optToggleChild"></div>
+        </div>
+    </div>
+    <div class="opt">
+        <span class="optTitle">Use Smooth Rendering</span>
+        <div class="optToggle" id="sr">
+            <div class="optToggleChild"></div>
+        </div>
+    </div>
+</div>
+<canvas id="analogCanvas" height="758" width="758"></canvas>
+<script src="clock.js"></script>
+
+
+</body>
+</html>

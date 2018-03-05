@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+
+  "name": "ChronoTab",
+  "description": "Render a modern timepiece on the new tab page",
+  "version": "1.0",
+  "icons": {
+    "16": "./res/clock_16.png",
+    "24": "./res/clock_24.png",
+    "32": "./res/clock_32.png",
+    "48": "./res/clock_48.png",
+    "64": "./res/clock_64.png",
+    "128": "./res/clock_128.png",
+    "256": "./res/clock_256.png"
+  },
+  "chrome_url_overrides" : {
+    "newtab" : "clock.html"
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab"
+  ]
+}
