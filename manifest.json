@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-
   "name": "ChronoTab: The New Tab Clock",
+  "short_name": "ChronoTab",
   "description": "The best timepiece for the new tab page",
   "version": "1.1",
   "icons": {
