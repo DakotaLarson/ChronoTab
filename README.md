@@ -1,2 +1,2 @@
-# ChronoTab: A Chromium Extension
-Render a modern timepiece on the new tab page
+# ChronoTab: The New Tab Clock
+The best timepiece for the new tab page
