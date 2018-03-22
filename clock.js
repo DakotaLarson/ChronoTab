@@ -1,8 +1,6 @@
 (function(){
     const pi = Math.PI;
     const canvas = document.querySelector('#clockCanvas');
-    const timelineCanvas = document.querySelector('#timelineCanvas');
-    const tCtx = timelineCanvas.getContext('2d');
     const optIcon = document.querySelector('.optIcon');
     const  optParent = document.querySelector('.optParent');
     const ctx = canvas.getContext('2d');
@@ -39,7 +37,6 @@
             options.alternateSeconds && !options.invertHands && options.data.secondsInverted ||
             options.alternateSeconds && options.invertHands && !options.data.secondsInverted;
         renderClock(canvasSize, computeHourAngle(date), computeMinuteAngle(date), secAngle,computeTimeText(date), options.invertHands, secondsBool, dateText);
-        renderTimeline(tCtx, date);
     });
     document.body.addEventListener('click', function(event){
         if(optParent.style.display === 'none'){
@@ -82,7 +79,6 @@
             options.alternateSeconds && !options.invertHands && options.data.secondsInverted ||
             options.alternateSeconds && options.invertHands && !options.data.secondsInverted;
         renderClock(canvasSize, computeHourAngle(date), computeMinuteAngle(date), secAngle,computeTimeText(date), options.invertHands, secondsBool, dateText);
-        renderTimeline(tCtx, date);
         if(options.smoothRendering && options.renderSeconds){
             setTimeout(update, 40);
         }else{
@@ -131,8 +127,6 @@
         let size = Math.min(width, height * 0.9);
         canvas.height = size;
         canvas.width = size;
-        timelineCanvas.width = width;
-        timelineCanvas.height = height * 0.1;
         return size;
     }
     function computeSecondAngle(date){
@@ -225,20 +219,6 @@
             }
         }
     }
-    function renderTimeline(ctx, date){
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, timelineCanvas.width, timelineCanvas.height);
-        ctx.font = timelineCanvas.height * 0.75 + fontEnding;
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = '#D4C7BE';
-        let year = date.getFullYear() - 5;
-        let dateText = String(year);
-        for(let i = 0; i < 10; i ++){
-            dateText += ' | ' + ++ year;
-        }
-        ctx.fillText(dateText, timelineCanvas.width/2 - tCtx.measureText(dateText).width/2, timelineCanvas.height/2);
-    }
-
     function handleSettingsUpdate(id, toggled){
         let value = '0';
         if(toggled){
