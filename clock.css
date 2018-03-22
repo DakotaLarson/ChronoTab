@@ -22,6 +22,8 @@ body {
 .optIcon {
     z-index: 1;
     position: fixed;
+    width: 24px;
+    height: 24px;
     left: calc(100% - 32px);
     bottom: calc(100% - 32px);
 }

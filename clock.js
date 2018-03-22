@@ -1,16 +1,15 @@
 (function(){
-    let pi = Math.PI;
-    let canvas = document.querySelector('#clockCanvas');
-    let timelineCanvas = document.querySelector('#timelineCanvas');
-    let optIcon = document.querySelector('.optIcon');
-    let optParent = document.querySelector('.optParent');
-    let ctx = canvas.getContext('2d');
-    let canvasSize = positionCanvas();
+    const pi = Math.PI;
+    const canvas = document.querySelector('#clockCanvas');
+    const timelineCanvas = document.querySelector('#timelineCanvas');
+    const tCtx = timelineCanvas.getContext('2d');
+    const optIcon = document.querySelector('.optIcon');
+    const  optParent = document.querySelector('.optParent');
+    const ctx = canvas.getContext('2d');
+    const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+    const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
     const fontEnding = 'px \'Nova Mono\', monospace';
-    let initDate = new Date();
-    let dateText = '';
-    let datePos = 0;
-    let options = {
+    const options = {
         invertHands: false,
         alternateSeconds: true,
         smoothRendering: false,
@@ -20,11 +19,16 @@
         renderDate: false,
         data: {
             secondsInverted: false,
-            secondsInvertedMinute: initDate.getMinutes(),
+            secondsInvertedMinute: new Date().getMinutes(),
             timeCtxFont: '',
             dateCtxFont: ''
         }
     };
+
+    let canvasSize = positionCanvas();
+    let dateText = '';
+    let datePos = 0;
+
     window.addEventListener('resize', function(){
         ctx.translate(canvasSize/2, canvasSize/2);
         canvasSize = positionCanvas();
@@ -35,6 +39,7 @@
             options.alternateSeconds && !options.invertHands && options.data.secondsInverted ||
             options.alternateSeconds && options.invertHands && !options.data.secondsInverted;
         renderClock(canvasSize, computeHourAngle(date), computeMinuteAngle(date), secAngle,computeTimeText(date), options.invertHands, secondsBool, dateText);
+        renderTimeline(tCtx, date);
     });
     document.body.addEventListener('click', function(event){
         if(optParent.style.display === 'none'){
@@ -77,6 +82,7 @@
             options.alternateSeconds && !options.invertHands && options.data.secondsInverted ||
             options.alternateSeconds && options.invertHands && !options.data.secondsInverted;
         renderClock(canvasSize, computeHourAngle(date), computeMinuteAngle(date), secAngle,computeTimeText(date), options.invertHands, secondsBool, dateText);
+        renderTimeline(tCtx, date);
         if(options.smoothRendering && options.renderSeconds){
             setTimeout(update, 40);
         }else{
@@ -177,8 +183,6 @@
         return text;
     }
     function computeDateText(date){
-        let days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
-        let months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
         return days[date.getDay()] + ', ' + months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
     }
     function computeFontSizes(ctx){
@@ -220,6 +224,19 @@
                 break;
             }
         }
+    }
+    function renderTimeline(ctx, date){
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, timelineCanvas.width, timelineCanvas.height);
+        ctx.font = timelineCanvas.height * 0.75 + fontEnding;
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#D4C7BE';
+        let year = date.getFullYear() - 5;
+        let dateText = String(year);
+        for(let i = 0; i < 10; i ++){
+            dateText += ' | ' + ++ year;
+        }
+        ctx.fillText(dateText, timelineCanvas.width/2 - tCtx.measureText(dateText).width/2, timelineCanvas.height/2);
     }
 
     function handleSettingsUpdate(id, toggled){
