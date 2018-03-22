@@ -1,10 +1,12 @@
 (function(){
     let pi = Math.PI;
-    let canvas = document.getElementById('analogCanvas');
+    let canvas = document.querySelector('#clockCanvas');
+    let timelineCanvas = document.querySelector('#timelineCanvas');
     let optIcon = document.querySelector('.optIcon');
     let optParent = document.querySelector('.optParent');
     let ctx = canvas.getContext('2d');
     let canvasSize = positionCanvas();
+    const fontEnding = 'px \'Nova Mono\', monospace';
     let initDate = new Date();
     let dateText = '';
     let datePos = 0;
@@ -118,9 +120,13 @@
         }
     }
     function positionCanvas(){
-        let size = Math.min(window.innerWidth, window.innerHeight);
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        let size = Math.min(width, height * 0.9);
         canvas.height = size;
         canvas.width = size;
+        timelineCanvas.width = width;
+        timelineCanvas.height = height * 0.1;
         return size;
     }
     function computeSecondAngle(date){
@@ -171,8 +177,8 @@
         return text;
     }
     function computeDateText(date){
-        let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        let days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+        let months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
         return days[date.getDay()] + ', ' + months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
     }
     function computeFontSizes(ctx){
@@ -185,12 +191,12 @@
             text += ' XM';
         }
         let fontSize = 300;
-        options.data.timeCtxFont = fontSize + 'px sans-serif';
+        options.data.timeCtxFont = fontSize + fontEnding;
         ctx.font = options.data.timeCtxFont;
         let textWidth = ctx.measureText(text).width;
         while(textWidth > canvasSize * 0.85 - 200){
             fontSize -= 5;
-            options.data.timeCtxFont = fontSize + 'px sans-serif';
+            options.data.timeCtxFont = fontSize + fontEnding;
             ctx.font = options.data.timeCtxFont;
             textWidth = ctx.measureText(text).width;
             if(fontSize <= 0){
@@ -201,12 +207,12 @@
         datePos = fontSize / 2;
         //DATE
         fontSize = 200;
-        options.data.dateCtxFont = fontSize + 'px sans-serif';
+        options.data.dateCtxFont = fontSize + fontEnding;
         ctx.font = options.data.dateCtxFont;
         textWidth = ctx.measureText(dateText).width;
         while(textWidth > canvasSize * 0.75 - 200){
             fontSize -= 5;
-            options.data.dateCtxFont = fontSize + 'px sans-serif';
+            options.data.dateCtxFont = fontSize + fontEnding;
             ctx.font = options.data.dateCtxFont;
             textWidth = ctx.measureText(dateText).width;
             if(fontSize <= 0){
@@ -215,6 +221,7 @@
             }
         }
     }
+
     function handleSettingsUpdate(id, toggled){
         let value = '0';
         if(toggled){
@@ -317,8 +324,13 @@
         let diff = nextDate - date;
         setTimeout(updateDateText, diff);
     }
+    let font = new FontFace('Nova Mono', 'url(NovaMonoLatin.woff2');
+    font.loaded.then(function(){
+        computeFontSizes(ctx);
+        update();
+    });
+    document.fonts.add(font);
+    font.load();
     initFromStorage();
     updateDateText();
-    computeFontSizes(ctx);
-    update();
 }());
