@@ -3,6 +3,14 @@
     const ctx = canvas.getContext('2d');
     const fontEnding = 'px \'Nova Mono\', monospace';
     let mouseDown = false;
+    let mouseMoveX = -1;
+    let mouseMoveY = -1;
+    let lastMouse = {
+        x: 0,
+        y: 0
+    };
+    let xTranslate = 0;
+    let date = new Date();
     window.addEventListener('resize', function(){
         update();
     });
@@ -20,6 +28,7 @@
         ctx.fillStyle = '#D4C7BE';
         let year = date.getFullYear() - 5;
         let dateText = String(year);
+        ctx.translate(xTranslate, 0);
         for(let i = 0; i < 10; i ++){
             dateText += ' | ' + ++ year;
         }
@@ -33,7 +42,7 @@
     document.fonts.ready.then(function(){
         update();
     });
-    canvas.addEventListener('mousedown', function(){
+    canvas.addEventListener('mousedown', function(event){
         document.body.addEventListener('mousemove', handleMouseMove);
         mouseDown = true;
     });
@@ -41,10 +50,20 @@
         if(mouseDown){
             document.body.removeEventListener('mousemove', handleMouseMove);
             mouseDown = false;
+            lastMouse.x = event.clientX;
+            lastMouse.y = event.clientY;
         }
     });
-
-    function handleMouseMove(){
-        console.log('move');
+    function handleMouseMove(event){
+        if(mouseMoveX === -1){
+            mouseMoveX = event.clientX;
+        }else{
+            mouseMoveX = xTranslate;
+        }
+        if(mouseMoveY === -1) mouseMoveY = event.clientY;
+        let xDiff = event.clientX - lastMouse.x;
+        console.log(xDiff);
+        xTranslate = xDiff;
+        //renderTimeline(ctx, date);
     }
 }());
