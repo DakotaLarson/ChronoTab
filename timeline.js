@@ -2,14 +2,14 @@
     const canvas = document.querySelector('#timelineCanvas');
     const ctx = canvas.getContext('2d');
     const fontEnding = 'px \'Nova Mono\', monospace';
+    const zoomSensitivity = 0.1;
     let mouseDown = false;
-    let mouseMoveX = -1;
-    let mouseMoveY = -1;
     let lastMouse = {
         x: 0,
         y: 0
     };
     let xTranslate = 0;
+    let zoom = 1;
     let date = new Date();
     window.addEventListener('resize', function(){
         update();
@@ -28,11 +28,14 @@
         ctx.fillStyle = '#D4C7BE';
         let year = date.getFullYear() - 5;
         let dateText = String(year);
-        ctx.translate(xTranslate, 0);
-        for(let i = 0; i < 10; i ++){
+        ctx.scale(zoom, zoom);
+        for(let i = 0; i < 2; i ++){
             dateText += ' | ' + ++ year;
         }
-        ctx.fillText(dateText, canvas.width/2 - ctx.measureText(dateText).width/2, canvas.height/2);
+        let textWidth = ctx.measureText(dateText).width;
+        console.log(zoom);
+        ctx.translate(xTranslate - textWidth/2, 0);
+        ctx.fillText(dateText, canvas.width/2, canvas.height/2);
     }
     function update(){
         let date = new Date();
@@ -43,27 +46,33 @@
         update();
     });
     canvas.addEventListener('mousedown', function(event){
+        lastMouse.x = event.clientX;
+        lastMouse.y = event.clientY;
         document.body.addEventListener('mousemove', handleMouseMove);
         mouseDown = true;
     });
-    document.body.addEventListener('mouseup', function(){
+    document.body.addEventListener('mouseup', handleMouseUp);
+    document.body.addEventListener('mouseenter', handleMouseUp);
+    canvas.addEventListener("wheel", function(event){
+        if(event.wheelDeltaY > 0){
+            zoom += zoomSensitivity;
+        }else{
+            zoom -= zoomSensitivity;
+        }
+        renderTimeline(ctx, date);
+
+    });
+    function handleMouseUp(){
         if(mouseDown){
             document.body.removeEventListener('mousemove', handleMouseMove);
             mouseDown = false;
-            lastMouse.x = event.clientX;
-            lastMouse.y = event.clientY;
         }
-    });
+    }
     function handleMouseMove(event){
-        if(mouseMoveX === -1){
-            mouseMoveX = event.clientX;
-        }else{
-            mouseMoveX = xTranslate;
-        }
-        if(mouseMoveY === -1) mouseMoveY = event.clientY;
         let xDiff = event.clientX - lastMouse.x;
-        console.log(xDiff);
-        xTranslate = xDiff;
-        //renderTimeline(ctx, date);
+        lastMouse.x = event.clientX;
+        xTranslate += xDiff;
+        renderTimeline(ctx, date);
     }
 }());
+//http://phrogz.net/tmp/canvas_zoom_to_cursor.html
