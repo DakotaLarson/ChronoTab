@@ -2,7 +2,7 @@
     const canvas = document.querySelector('#timelineCanvas');
     const ctx = canvas.getContext('2d');
     const fontEnding = 'px \'Nova Mono\', monospace';
-    const zoomSensitivity = 0.1;
+    const zoomSensitivity = 1.1;
     let mouseDown = false;
     let lastMouse = {
         x: 0,
@@ -23,12 +23,12 @@
     function renderTimeline(ctx, date){
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = canvas.height * 0.75 + fontEnding;
+        ctx.font = canvas.height * 0.75 * zoom + fontEnding;
         ctx.textBaseline = 'middle';
         ctx.fillStyle = '#D4C7BE';
         let year = date.getFullYear() - 5;
         let dateText = String(year);
-        ctx.scale(zoom, zoom);
+        //ctx.scale(zoom, zoom);
         for(let i = 0; i < 2; i ++){
             dateText += ' | ' + ++ year;
         }
@@ -55,9 +55,9 @@
     document.body.addEventListener('mouseenter', handleMouseUp);
     canvas.addEventListener("wheel", function(event){
         if(event.wheelDeltaY > 0){
-            zoom += zoomSensitivity;
+            zoom *= zoomSensitivity;
         }else{
-            zoom -= zoomSensitivity;
+            zoom /= zoomSensitivity;
         }
         renderTimeline(ctx, date);
 
