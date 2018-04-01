@@ -7,15 +7,24 @@ body {
     overflow: hidden;
     user-select: none;
 }
-#analogCanvas {
+#clockCanvas {
     position: relative;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
+#timelineCanvas{
+    position: fixed;
+    top: 100%;
+    left: 0;
+    transform: translateY(-100%);
+    display: none;
+}
 .optIcon {
     z-index: 1;
     position: fixed;
+    width: 24px;
+    height: 24px;
     left: calc(100% - 32px);
     bottom: calc(100% - 32px);
 }
@@ -46,7 +55,8 @@ body {
     border-bottom: none;
 }
 .optTitle {
-    font-family: sans-serif;
+    font-family: 'Nova Mono', monospace;
+    text-transform: uppercase;
     font-size: 20px;
 }
 .optToggle{
@@ -61,7 +71,7 @@ body {
     text-align: right;
     background: #ffffff;
 }
-.optToggleChild{
+.optToggleChild {
     height: 24px;
     width: 24px;
     display: inline-block;

@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "ChronoTab: The New Tab Clock",
+  "name": "ChronoTab: The Best New Tab Clock",
   "short_name": "ChronoTab",
   "author": "Dakota Larson",
   "description": "The best timepiece for the new tab page",
-  "version": "1.2",
+  "version": "1.3",
   "icons": {
     "16": "./res/clock_16.png",
     "24": "./res/clock_24.png",
@@ -19,8 +19,5 @@
   },
   "browser_action": {
     "default_popup": "popup.html"
-  },
-  "permissions": [
-    "activeTab"
-  ]
+  }
 }

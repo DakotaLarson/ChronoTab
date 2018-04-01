@@ -1,14 +1,13 @@
 (function(){
-    let pi = Math.PI;
-    let canvas = document.getElementById('analogCanvas');
-    let optIcon = document.querySelector('.optIcon');
-    let optParent = document.querySelector('.optParent');
-    let ctx = canvas.getContext('2d');
-    let canvasSize = positionCanvas();
-    let initDate = new Date();
-    let dateText = '';
-    let datePos = 0;
-    let options = {
+    const pi = Math.PI;
+    const canvas = document.querySelector('#clockCanvas');
+    const optIcon = document.querySelector('.optIcon');
+    const  optParent = document.querySelector('.optParent');
+    const ctx = canvas.getContext('2d');
+    const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+    const months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+    const fontEnding = 'px \'Nova Mono\', monospace';
+    const options = {
         invertHands: false,
         alternateSeconds: true,
         smoothRendering: false,
@@ -18,11 +17,16 @@
         renderDate: false,
         data: {
             secondsInverted: false,
-            secondsInvertedMinute: initDate.getMinutes(),
+            secondsInvertedMinute: new Date().getMinutes(),
             timeCtxFont: '',
             dateCtxFont: ''
         }
     };
+
+    let canvasSize = positionCanvas();
+    let dateText = '';
+    let datePos = 0;
+
     window.addEventListener('resize', function(){
         ctx.translate(canvasSize/2, canvasSize/2);
         canvasSize = positionCanvas();
@@ -118,7 +122,9 @@
         }
     }
     function positionCanvas(){
-        let size = Math.min(window.innerWidth, window.innerHeight);
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        let size = Math.min(width, height);
         canvas.height = size;
         canvas.width = size;
         return size;
@@ -171,8 +177,6 @@
         return text;
     }
     function computeDateText(date){
-        let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         return days[date.getDay()] + ', ' + months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
     }
     function computeFontSizes(ctx){
@@ -185,12 +189,12 @@
             text += ' XM';
         }
         let fontSize = 300;
-        options.data.timeCtxFont = fontSize + 'px sans-serif';
+        options.data.timeCtxFont = fontSize + fontEnding;
         ctx.font = options.data.timeCtxFont;
         let textWidth = ctx.measureText(text).width;
         while(textWidth > canvasSize * 0.85 - 200){
             fontSize -= 5;
-            options.data.timeCtxFont = fontSize + 'px sans-serif';
+            options.data.timeCtxFont = fontSize + fontEnding;
             ctx.font = options.data.timeCtxFont;
             textWidth = ctx.measureText(text).width;
             if(fontSize <= 0){
@@ -201,12 +205,12 @@
         datePos = fontSize / 2;
         //DATE
         fontSize = 200;
-        options.data.dateCtxFont = fontSize + 'px sans-serif';
+        options.data.dateCtxFont = fontSize + fontEnding;
         ctx.font = options.data.dateCtxFont;
         textWidth = ctx.measureText(dateText).width;
         while(textWidth > canvasSize * 0.75 - 200){
             fontSize -= 5;
-            options.data.dateCtxFont = fontSize + 'px sans-serif';
+            options.data.dateCtxFont = fontSize + fontEnding;
             ctx.font = options.data.dateCtxFont;
             textWidth = ctx.measureText(dateText).width;
             if(fontSize <= 0){
@@ -317,8 +321,13 @@
         let diff = nextDate - date;
         setTimeout(updateDateText, diff);
     }
+    let font = new FontFace('Nova Mono', 'url(NovaMonoLatin.woff2');
+    font.loaded.then(function(){
+        computeFontSizes(ctx);
+        update();
+    });
+    document.fonts.add(font);
+    font.load();
     initFromStorage();
     updateDateText();
-    computeFontSizes(ctx);
-    update();
 }());
