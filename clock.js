@@ -124,7 +124,7 @@
     function positionCanvas(){
         let width = window.innerWidth;
         let height = window.innerHeight;
-        let size = Math.min(width, height * 0.9);
+        let size = Math.min(width, height);
         canvas.height = size;
         canvas.width = size;
         return size;

@@ -74,5 +74,5 @@
         xTranslate += xDiff;
         renderTimeline(ctx, date);
     }
-}());
+}/*()*/);
 //http://phrogz.net/tmp/canvas_zoom_to_cursor.html
