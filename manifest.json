@@ -4,7 +4,7 @@
   "short_name": "ChronoTab",
   "author": "Dakota Larson",
   "description": "The best timepiece for the new tab page",
-  "version": "1.3",
+  "version": "1.4",
   "icons": {
     "16": "./res/clock_16.png",
     "24": "./res/clock_24.png",
