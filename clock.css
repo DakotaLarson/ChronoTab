@@ -35,47 +35,79 @@ body {
     position: fixed;
     left: calc(100% - 324px);
     top: 32px;
-}
-.optParentTitle{
-    font-family: sans-serif;
-    font-size: 36px;
+    font-family: 'Nova Mono', monospace;
+    text-transform: uppercase;
+    color: #c9c9c9;
     text-align: center;
-    color: #ffffff;
-    border-bottom: solid 1px #ffffff
 }
 .opt{
-    color: #c9c9c9;
-    padding: 10px;
+    padding: 3px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: solid 1px #ffffff
-}
-.opt:last-child{
-    border-bottom: none;
-}
-.optTitle {
-    font-family: 'Nova Mono', monospace;
-    text-transform: uppercase;
     font-size: 20px;
 }
-.optToggle{
-    width: 48px;
-    height: 24px;
+.opt:hover{
+    background-color: rgba(255, 255, 255, 0.125);
+    cursor: pointer;
+    color: #ffffff;
+}
+.toggleParent{
+    width: 40px;
+    height: 20px;
     background-color: #909090;
     display: inline-block;
-    border-radius: 12px;
+    border-radius: 10px;
     border: solid 1px white;
+    line-height: 20px;
+    text-align: left;
 }
-.optToggleToggled{
+input[type="checkbox"]:checked + .toggleParent{
     text-align: right;
     background: #ffffff;
 }
-.optToggleChild {
-    height: 24px;
-    width: 24px;
+.optParent input[type="checkbox"]{
+    display: none;
+}
+.toggleChild {
+    height: 20px;
+    width: 20px;
     display: inline-block;
-    background: green;
-    border-radius: 24px;
-    position: relative;
+    background-color: green;
+    border-radius: 20px;
+}
+.parentTitle{
+    padding: 5px 0;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+}
+input[type="color"] {
+    width: 20px;
+    height: 20px;
+    outline: none;
+    background: none;
+    border: none;
+    padding: 0;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+    border-radius: 20px;
+    border: solid 1px white;
+}
+.optParent button{
+    outline: none;
+    border: solid 1px;
+    color: #ffffff;
+    background: none;
+    font-size: 15px;
+    font-family: 'Nova Mono', monospace;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+.optParent button:hover{
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.125);
 }

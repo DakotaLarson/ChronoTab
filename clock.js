@@ -20,9 +20,17 @@
             secondsInvertedMinute: new Date().getMinutes(),
             timeCtxFont: '',
             dateCtxFont: ''
+        },
+        colors: {
+            bCol: '#040c0e',
+            hCol: '#233236',
+            mCol: '#626b66',
+            sCol: '#cea073',
+            tCol: '#d4c7be',
+            dCol: '#a4978e'
         }
-    };
 
+    };
     let canvasSize = positionCanvas();
     let dateText = '';
     let datePos = 0;
@@ -59,18 +67,52 @@
             }
         }
     });
-    let switches = document.querySelectorAll('.optToggle');
+    let switches = optParent.querySelectorAll('input[type="checkbox"]');
     for(let i = 0; i< switches.length; i ++){
         let element = switches[i];
         element.addEventListener('click', function(){
-            if(element.classList.contains('optToggleToggled')){
-                element.classList.remove('optToggleToggled');
-                handleSettingsUpdate(element.id, false);
-            }else{
-                element.classList.add('optToggleToggled');
+            if(element.checked){
                 handleSettingsUpdate(element.id, true);
+            }else{
+                handleSettingsUpdate(element.id, false);
             }
         });
+    }
+    optParent.querySelector('#colorReset').addEventListener('click', function(){
+        let codes = Object.keys(options.colors);
+        let resetColors = {
+            bCol: '#040c0e',
+            hCol: '#233236',
+            mCol: '#626b66',
+            sCol: '#cea073',
+            tCol: '#d4c7be',
+            dCol: '#a4978e'
+        };
+        for(let i = 0; i < codes.length; i ++){
+            let id = codes[i];
+            localStorage.removeItem(codes[i]);
+            optParent.querySelector('#' + id).value = resetColors[id];
+            let selectorText = '#' + id + 'Text';
+            optParent.querySelector(selectorText).textContent = resetColors[id];
+        }
+        options.colors = resetColors;
+        document.body.style.backgroundColor = resetColors.bCol;
+        updateIconColor(resetColors.bCol);
+
+    });
+    let colorSwitches = optParent.querySelectorAll('input[type="color"]');
+    for(let i = 0; i< colorSwitches.length; i ++){
+        let element = colorSwitches[i];
+        element.addEventListener('change', function(){
+            localStorage[element.id] = element.value;
+            options.colors[element.id] = element.value;
+            let selectorText = '#' + element.id + 'Text';
+            optParent.querySelector(selectorText).textContent = element.value;
+            if(element.id === 'bCol'){
+                document.body.style.backgroundColor = element.value;
+                updateIconColor(element.value);
+            }
+        })
     }
     function update(){
         let date = new Date(Date.now());
@@ -91,20 +133,20 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.translate(size/2, size/2);
         //HOUR
-        ctx.strokeStyle = '#233236';
+        ctx.strokeStyle = options.colors.hCol;
         ctx.lineWidth = 30;
         ctx.beginPath();
         ctx.arc(0, 0, size/2*0.95 - 15, 1.5 * pi, hrAngle, inverted);
         ctx.stroke();
         //MINUTE
-        ctx.strokeStyle = '#626B66';
+        ctx.strokeStyle = options.colors.mCol;
         ctx.lineWidth = 20;
         ctx.beginPath();
         ctx.arc(0, 0, size/2*0.95 - 10 - 50, 1.5 * pi, minAngle, inverted);
         ctx.stroke();
         //SECOND
         if(options.renderSeconds){
-            ctx.strokeStyle = '#CEA073';
+            ctx.strokeStyle = options.colors.sCol;
             ctx.lineWidth = 10;
             ctx.beginPath();
             ctx.arc(0, 0, size/2*0.95 - 5 - 90, 1.5 * pi, secAngle, secInverted);
@@ -112,11 +154,11 @@
         }
         //TIME
         ctx.font = options.data.timeCtxFont;
-        ctx.fillStyle = '#D4C7BE';
+        ctx.fillStyle = options.colors.tCol;
         ctx.fillText(timeText, ctx.measureText(timeText).width / -2, 0);
         //DATE
         if(options.renderDate){
-            ctx.fillStyle = '#A4978E';
+            ctx.fillStyle = options.colors.dCol;
             ctx.font = options.data.dateCtxFont;
             ctx.fillText(dateText, ctx.measureText(dateText).width / - 2, datePos);
         }
@@ -148,7 +190,7 @@
         let ending = '';
         let hours = date.getHours();
         if(options.standardTime){
-            if(hours > 12){
+            if(hours >= 12){
                 ending = ' PM';
             }else{
                 ending = ' AM';
@@ -253,15 +295,16 @@
         }else{
             options.smoothRendering = localStorage.sr === '1';
             if(options.smoothRendering){
-                document.querySelector('#sr').classList.add('optToggleToggled');
+                optParent.querySelector('#sr').checked = true;
             }
         }if(!localStorage.st){
-            localStorage.st = 0;
-            options.standardTime = false;
+            localStorage.st = 1;
+            options.standardTime = true;
+            optParent.querySelector('#st');
         }else{
             options.standardTime = localStorage.st === '1';
             if(options.standardTime){
-                document.querySelector('#st').classList.add('optToggleToggled');
+                optParent.querySelector('#st').checked = true;
             }
         }
         if(!localStorage.ih){
@@ -270,43 +313,86 @@
         }else{
             options.invertHands = localStorage.ih === '1';
             if(options.invertHands){
-                document.querySelector('#ih').classList.add('optToggleToggled');
+                optParent.querySelector('#ih').checked = true;
             }
         }if(!localStorage.rs){
             localStorage.rs = 1;
             options.renderSeconds = true;
-            document.querySelector('#rs').classList.add('optToggleToggled');
+            optParent.querySelector('#rs').checked = true;
         }else{
             options.renderSeconds = localStorage.rs === '1';
             if(options.renderSeconds){
-                document.querySelector('#rs').classList.add('optToggleToggled');
+                optParent.querySelector('#rs').checked = true;
             }
         }if(!localStorage.as){
             localStorage.as = 1;
             options.alternateSeconds = true;
-            document.querySelector('#as').classList.add('optToggleToggled');
+            optParent.querySelector('#as').checked = true;
         }else{
             options.alternateSeconds = localStorage.as === '1';
             if(options.alternateSeconds){
-                document.querySelector('#as').classList.add('optToggleToggled');
+                optParent.querySelector('#as').checked = true;
             }
         }if(!localStorage.bs){
             localStorage.bs = 0;
         }else{
             options.blinkSeparator = localStorage.bs === '1';
             if(options.blinkSeparator){
-                document.querySelector('#bs').classList.add('optToggleToggled');
+                optParent.querySelector('#bs').checked = true;
             }
         }
         if(!localStorage.rd){
             localStorage.rd = 1;
-            document.querySelector('#rd').classList.add('optToggleToggled');
+            optParent.querySelector('#rd').checked = true;
             options.renderDate = true;
         }else{
             options.renderDate = localStorage.rd === '1';
             if(options.renderDate){
-                document.querySelector('#rd').classList.add('optToggleToggled');
+                optParent.querySelector('#rd').checked = true;
             }
+        }
+        if(localStorage.bCol){
+            options.colors.bCol = localStorage.bCol;
+            document.body.style.backgroundColor = options.colors.bCol;
+            updateIconColor(options.colors.bCol);
+            optParent.querySelector('#bCol').value = options.colors.bCol;
+            optParent.querySelector('#bColText').textContent = options.colors.bCol;
+        }
+        if(localStorage.hCol){
+            options.colors.hCol = localStorage.hCol;
+            optParent.querySelector('#hCol').value = options.colors.hCol;
+            optParent.querySelector('#hColText').textContent = options.colors.hCol;
+        }
+        if(localStorage.mCol){
+            options.colors.mCol = localStorage.mCol;
+            optParent.querySelector('#mCol').value = options.colors.mCol;
+            optParent.querySelector('#mColText').textContent = options.colors.mCol;
+        }
+        if(localStorage.sCol){
+            options.colors.sCol = localStorage.sCol;
+            optParent.querySelector('#sCol').value = options.colors.sCol;
+            optParent.querySelector('#sColText').textContent = options.colors.sCol;
+        }
+        if(localStorage.tCol){
+            options.colors.tCol = localStorage.tCol;
+            optParent.querySelector('#tCol').value = options.colors.tCol;
+            optParent.querySelector('#tColText').textContent = options.colors.tCol;
+        }
+        if(localStorage.dCol){
+            options.colors.dCol = localStorage.dCol;
+            optParent.querySelector('#dCol').value = options.colors.dCol;
+            optParent.querySelector('#dColText').textContent = options.colors.dCol;
+        }
+    }
+    function updateIconColor(hex){
+        let r = parseInt(hex.slice(1, 3), 16);
+        let g = parseInt(hex.slice(3, 5), 16);
+        let b = parseInt(hex.slice(5, 7), 16);
+        let brightness = Math.sqrt((r * r * 0.241) + (g * g * 0.691) + (b * b * 0.068));
+        if(brightness > 128){
+            document.querySelector('.optIcon').style.fill = '#000000';
+        }else{
+            document.querySelector('.optIcon').style.fill = '#ffffff';
         }
     }
     function updateDateText(){
